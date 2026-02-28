@@ -1,0 +1,58 @@
+# ─── สำหรับ Deploy / Demo: รันทุกอย่างพร้อมกัน ───
+# ใช้คำสั่ง: docker compose up --build -d
+# หยุด:     docker compose down
+
+services:
+  # ── MSSQL Server ──
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fleetcar-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=FleetCar@Dev123
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/lib/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "FleetCar@Dev123" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── Backend API ──
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fleetcar-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=FleetCarDb;User Id=sa;Password=FleetCar@Dev123;TrustServerCertificate=True;
+      - Jwt__Key=SuperSecretDevKey_ChangeInProduction_MinLength32Chars!!
+      - Jwt__Issuer=FleetCarAPI
+      - Jwt__Audience=FleetCarClient
+    volumes:
+      - uploads-data:/app/wwwroot/uploads
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  # ── Frontend ──
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:5000
+    container_name: fleetcar-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  sqlserver-data:
+  uploads-data:

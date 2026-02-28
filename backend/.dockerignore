@@ -1,0 +1,6 @@
+**/*.md
+**/bin/
+**/obj/
+**/node_modules/
+**/.git/
+**/.vs/

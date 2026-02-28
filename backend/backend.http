@@ -1,6 +1,197 @@
-@backend_HostAddress = http://localhost:5205
+### ═══════════════════════════════════════════════════════════════════════
+###  FleetCar API - Test Requests
+###  Base URL: http://localhost:5205 (dev) หรือ http://localhost:5000 (docker)
+### ═══════════════════════════════════════════════════════════════════════
 
-GET {{backend_HostAddress}}/weatherforecast/
-Accept: application/json
+@baseUrl = http://localhost:5205
+@token = {{login.response.body.token}}
 
-###
+
+### ─────────────────────────── AUTH ───────────────────────────────────
+
+### 1. Register User
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "P@ssw0rd123",
+  "fullName": "System Admin"
+}
+
+### 2. Login (เก็บ token อัตโนมัติ)
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "P@ssw0rd123"
+}
+
+
+### ─────────────────────────── VEHICLES (PUBLIC) ─────────────────────
+
+### 3. Get All Vehicles
+GET {{baseUrl}}/api/vehicles
+
+### 4. Search Vehicles
+GET {{baseUrl}}/api/vehicles?search=toyota&page=1&pageSize=10
+
+### 5. Filter by Status + Sort
+GET {{baseUrl}}/api/vehicles?status=Available&sortBy=year&sortDirection=desc
+
+### 6. Get Vehicle by ID
+GET {{baseUrl}}/api/vehicles/1
+
+
+### ─────────────────────────── VEHICLES (AUTHORIZED) ─────────────────
+
+### 7. Create Vehicle #1
+POST {{baseUrl}}/api/vehicles
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary
+
+------FormBoundary
+Content-Disposition: form-data; name="licensePlate"
+
+กข-1234
+------FormBoundary
+Content-Disposition: form-data; name="brand"
+
+Toyota
+------FormBoundary
+Content-Disposition: form-data; name="model"
+
+Camry
+------FormBoundary
+Content-Disposition: form-data; name="year"
+
+2024
+------FormBoundary
+Content-Disposition: form-data; name="color"
+
+White
+------FormBoundary
+Content-Disposition: form-data; name="engineType"
+
+Petrol
+------FormBoundary
+Content-Disposition: form-data; name="fuelType"
+
+Gasoline
+------FormBoundary
+Content-Disposition: form-data; name="mileage"
+
+15000
+------FormBoundary
+Content-Disposition: form-data; name="status"
+
+Available
+------FormBoundary
+Content-Disposition: form-data; name="notes"
+
+Company sedan - executive use
+------FormBoundary--
+
+### 8. Create Vehicle #2
+POST {{baseUrl}}/api/vehicles
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary2
+
+------FormBoundary2
+Content-Disposition: form-data; name="licensePlate"
+
+ขค-5678
+------FormBoundary2
+Content-Disposition: form-data; name="brand"
+
+Honda
+------FormBoundary2
+Content-Disposition: form-data; name="model"
+
+Civic
+------FormBoundary2
+Content-Disposition: form-data; name="year"
+
+2025
+------FormBoundary2
+Content-Disposition: form-data; name="color"
+
+Black
+------FormBoundary2
+Content-Disposition: form-data; name="engineType"
+
+Hybrid
+------FormBoundary2
+Content-Disposition: form-data; name="fuelType"
+
+Gasoline/Electric
+------FormBoundary2
+Content-Disposition: form-data; name="mileage"
+
+5000
+------FormBoundary2
+Content-Disposition: form-data; name="status"
+
+InUse
+------FormBoundary2
+Content-Disposition: form-data; name="notes"
+
+Department pool car
+------FormBoundary2--
+
+### 9. Update Vehicle (ID = 1)
+PUT {{baseUrl}}/api/vehicles/1
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----FormBoundary3
+
+------FormBoundary3
+Content-Disposition: form-data; name="color"
+
+Silver
+------FormBoundary3
+Content-Disposition: form-data; name="mileage"
+
+18500
+------FormBoundary3
+Content-Disposition: form-data; name="status"
+
+Maintenance
+------FormBoundary3
+Content-Disposition: form-data; name="notes"
+
+Scheduled maintenance - oil change
+------FormBoundary3--
+
+### 10. Delete Vehicle (ID = 1)
+DELETE {{baseUrl}}/api/vehicles/1
+Authorization: Bearer {{token}}
+
+
+### ─────────────────────────── TEST UNAUTHORIZED ─────────────────────
+
+### 11. Create without token (expect 401)
+POST {{baseUrl}}/api/vehicles
+Content-Type: multipart/form-data; boundary=----FormBoundary4
+
+------FormBoundary4
+Content-Disposition: form-data; name="licensePlate"
+
+TEST-0000
+------FormBoundary4
+Content-Disposition: form-data; name="brand"
+
+TestBrand
+------FormBoundary4
+Content-Disposition: form-data; name="model"
+
+TestModel
+------FormBoundary4
+Content-Disposition: form-data; name="year"
+
+2020
+------FormBoundary4--
+
+### 12. Delete without token (expect 401)
+DELETE {{baseUrl}}/api/vehicles/1
