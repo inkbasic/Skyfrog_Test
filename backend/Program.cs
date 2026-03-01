@@ -60,7 +60,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
-// ── Middleware Pipeline ───────────────────────────────────────────────────────app.UseMiddleware<Backend.Middleware.GlobalExceptionMiddleware>();
+// ── Auto-Migrate Database ──────────────────────────────────────────────────────
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
+// ── Middleware Pipeline ───────────────────────────────────────────────────────
+app.UseMiddleware<Backend.Middleware.GlobalExceptionMiddleware>();
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseStaticFiles();          // Serve wwwroot/uploads images

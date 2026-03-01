@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5205';
+export const API_BASE_URL = import.meta.env.VITE_API_URL ?? '';
 
 /** Convert a relative image path (e.g. /uploads/xxx.jpg) to a full URL */
 export function getImageUrl(path?: string | null): string | undefined {
