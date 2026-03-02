@@ -73,16 +73,11 @@ export const ENGINE_TYPE_OPTIONS = [
 ] as const;
 
 export const FUEL_TYPE_OPTIONS = [
-  'Gasoline 91',
-  'Gasoline 95',
-  'Gasohol E20',
-  'Gasohol E85',
-  'Diesel B7',
-  'Diesel B20',
+  'Benzine',
+  'Diesel',
+  'LPG/NGV',
   'Electric',
-  'Gasoline/Electric',
-  'LPG',
-  'NGV/CNG',
+  'Hybrid',
 ] as const;
 
 export const STATUS_OPTIONS = [
