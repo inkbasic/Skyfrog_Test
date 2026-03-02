@@ -85,7 +85,6 @@ docker ps
 ngrok http 5173
 
 # จะได้ URL เช่น https://xxxx.ngrok-free.app
-# ส่ง URL นี้ให้ผู้ตรวจสอบได้เลย
 ```
 
 ### พัฒนาแบบ Local (Dev Mode)
