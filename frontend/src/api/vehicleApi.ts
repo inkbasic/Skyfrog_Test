@@ -4,6 +4,7 @@ import axiosInstance from './axiosInstance';
 export interface VehicleDto {
   id: number;
   licensePlate: string;
+  province: string;
   brand: string;
   model: string;
   year: number;
@@ -11,7 +12,6 @@ export interface VehicleDto {
   vinNumber?: string;
   engineType?: string;
   fuelType?: string;
-  province?: string;
   mileage?: number;
   status: string;
   imageUrl?: string;

@@ -296,6 +296,31 @@ export default function VehicleFormPage() {
 								placeholder="e.g. กข-1234"
 							/>
 
+							{/* Province */}
+							<FormControl fullWidth size="small" error={!!errors.province}>
+								<InputLabel>Province (จังหวัด) *</InputLabel>
+								<Select
+									value={province}
+									label="Province (จังหวัด) *"
+									onChange={(e) => {
+										setProvince(e.target.value);
+										setErrors((p) => ({ ...p, province: '' }));
+									}}
+									MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
+								>
+									{PROVINCE_OPTIONS.map((p) => (
+										<MenuItem key={p} value={p}>
+											{p}
+										</MenuItem>
+									))}
+								</Select>
+								{errors.province && (
+									<Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
+										{errors.province}
+									</Typography>
+								)}
+							</FormControl>
+
 							{/* Brand */}
 							<Autocomplete
 								freeSolo
@@ -362,30 +387,6 @@ export default function VehicleFormPage() {
 								inputProps={{ min: 1900, max: new Date().getFullYear() }}
 							/>
 
-							{/* Province */}
-							<FormControl fullWidth error={!!errors.province}>
-								<InputLabel>จังหวัด (Province) *</InputLabel>
-								<Select
-									value={province}
-									label="จังหวัด (Province) *"
-									onChange={(e) => {
-										setProvince(e.target.value);
-										setErrors((p) => ({ ...p, province: '' }));
-									}}
-									MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
-								>
-									{PROVINCE_OPTIONS.map((p) => (
-										<MenuItem key={p} value={p}>
-											{p}
-										</MenuItem>
-									))}
-								</Select>
-								{errors.province && (
-									<Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
-										{errors.province}
-									</Typography>
-								)}
-							</FormControl>
 						</Box>
 
 						<Divider sx={{ my: 3 }} />
@@ -503,7 +504,7 @@ export default function VehicleFormPage() {
 							/>
 
 							{/* Status */}
-							<FormControl fullWidth>
+							<FormControl fullWidth size='small'>
 								<InputLabel>Status</InputLabel>
 								<Select
 									value={status}
