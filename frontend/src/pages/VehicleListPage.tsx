@@ -270,6 +270,7 @@ export default function VehicleListPage() {
                     { id: 'model', label: 'Model' },
                     { id: 'year', label: 'Year' },
                     { id: 'status', label: 'Status' },
+                    { id: 'province', label: 'Province' },
                     { id: 'createdAt', label: 'Created' },
                   ].map((col) => (
                     <TableCell key={col.id} sx={{ fontWeight: 600 }}>
@@ -310,6 +311,11 @@ export default function VehicleListPage() {
                     <TableCell>{v.year}</TableCell>
                     <TableCell>
                       <StatusBadge status={v.status} />
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" color="text.secondary">
+                        {v.province || '-'}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" color="text.secondary">

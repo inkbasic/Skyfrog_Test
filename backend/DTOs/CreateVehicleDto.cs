@@ -31,6 +31,9 @@ public class CreateVehicleDto
     [MaxLength(30)]
     public string? FuelType { get; set; }
 
+    [Required, MaxLength(50)]
+    public string Province { get; set; } = string.Empty;
+
     [Range(0, double.MaxValue, ErrorMessage = "Mileage must be a positive number.")]
     public double? Mileage { get; set; }
 

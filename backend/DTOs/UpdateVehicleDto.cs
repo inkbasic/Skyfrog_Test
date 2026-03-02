@@ -31,6 +31,9 @@ public class UpdateVehicleDto
     [MaxLength(30)]
     public string? FuelType { get; set; }
 
+    [MaxLength(50)]
+    public string? Province { get; set; }
+
     [Range(0, double.MaxValue, ErrorMessage = "Mileage must be a positive number.")]
     public double? Mileage { get; set; }
 

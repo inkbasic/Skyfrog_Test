@@ -32,6 +32,9 @@ public class Vehicle
     [MaxLength(30)]
     public string? FuelType { get; set; }
 
+    [Required, MaxLength(50)]
+    public string Province { get; set; } = string.Empty;
+
     public double? Mileage { get; set; }
 
     [MaxLength(20)]

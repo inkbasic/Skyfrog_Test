@@ -30,6 +30,7 @@ import {
 	ENGINE_TYPE_OPTIONS,
 	FUEL_TYPE_OPTIONS,
 	STATUS_OPTIONS,
+	PROVINCE_OPTIONS,
 } from '../constants/vehicleData';
 
 export default function VehicleFormPage() {
@@ -47,6 +48,7 @@ export default function VehicleFormPage() {
 	const [engineType, setEngineType] = useState('');
 	const [fuelType, setFuelType] = useState('');
 	const [mileage, setMileage] = useState<string>('');
+	const [province, setProvince] = useState('');
 	const [status, setStatus] = useState('Available');
 	const [notes, setNotes] = useState('');
 	const [imageFile, setImageFile] = useState<File | null>(null);
@@ -81,6 +83,7 @@ export default function VehicleFormPage() {
 				setVinNumber(v.vinNumber || '');
 				setEngineType(v.engineType || '');
 				setFuelType(v.fuelType || '');
+				setProvince(v.province || '');
 				setMileage(v.mileage != null ? String(v.mileage) : '');
 				setStatus(v.status);
 				setNotes(v.notes || '');
@@ -141,6 +144,12 @@ export default function VehicleFormPage() {
 			errs.year = `Year must be between 1900 and ${new Date().getFullYear()}`;
 		}
 
+		if (!province) {
+			errs.province = 'Province is required';
+		} else if (![...PROVINCE_OPTIONS].includes(province as typeof PROVINCE_OPTIONS[number])) {
+			errs.province = 'Please select a valid province';
+		}
+
 		if (color.trim().length > 20) {
 			errs.color = 'Max 20 characters';
 		}
@@ -187,6 +196,7 @@ export default function VehicleFormPage() {
 			formData.append('model', model.trim());
 			formData.append('year', String(year));
 			formData.append('status', status);
+			formData.append('province', province);
 
 			if (color.trim()) formData.append('color', color.trim());
 			if (vinNumber.trim()) formData.append('vinNumber', vinNumber.trim());
@@ -351,6 +361,31 @@ export default function VehicleFormPage() {
 								fullWidth
 								inputProps={{ min: 1900, max: new Date().getFullYear() }}
 							/>
+
+							{/* Province */}
+							<FormControl fullWidth error={!!errors.province}>
+								<InputLabel>จังหวัด (Province) *</InputLabel>
+								<Select
+									value={province}
+									label="จังหวัด (Province) *"
+									onChange={(e) => {
+										setProvince(e.target.value);
+										setErrors((p) => ({ ...p, province: '' }));
+									}}
+									MenuProps={{ PaperProps: { sx: { maxHeight: 300 } } }}
+								>
+									{PROVINCE_OPTIONS.map((p) => (
+										<MenuItem key={p} value={p}>
+											{p}
+										</MenuItem>
+									))}
+								</Select>
+								{errors.province && (
+									<Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.75 }}>
+										{errors.province}
+									</Typography>
+								)}
+							</FormControl>
 						</Box>
 
 						<Divider sx={{ my: 3 }} />

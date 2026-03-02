@@ -11,6 +11,7 @@ export interface VehicleDto {
   vinNumber?: string;
   engineType?: string;
   fuelType?: string;
+  province?: string;
   mileage?: number;
   status: string;
   imageUrl?: string;

@@ -94,6 +94,7 @@ public class VehicleService : IVehicleService
             VinNumber = dto.VinNumber,
             EngineType = dto.EngineType,
             FuelType = dto.FuelType,
+            Province = dto.Province,
             Mileage = dto.Mileage,
             Status = dto.Status ?? "Available",
             Notes = dto.Notes,
@@ -129,6 +130,7 @@ public class VehicleService : IVehicleService
         if (dto.VinNumber is not null)    vehicle.VinNumber = dto.VinNumber;
         if (dto.EngineType is not null)   vehicle.EngineType = dto.EngineType;
         if (dto.FuelType is not null)     vehicle.FuelType = dto.FuelType;
+        if (dto.Province is not null)     vehicle.Province = dto.Province;
         if (dto.Mileage.HasValue)         vehicle.Mileage = dto.Mileage.Value;
         if (dto.Status is not null)       vehicle.Status = dto.Status;
         if (dto.Notes is not null)        vehicle.Notes = dto.Notes;
@@ -204,6 +206,7 @@ public class VehicleService : IVehicleService
         VinNumber = v.VinNumber,
         EngineType = v.EngineType,
         FuelType = v.FuelType,
+        Province = v.Province,
         Mileage = v.Mileage,
         Status = v.Status,
         ImageUrl = v.ImagePath,

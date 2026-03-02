@@ -19,6 +19,7 @@ import SpeedIcon from '@mui/icons-material/Speed';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import PlaceIcon from '@mui/icons-material/Place';
 import { vehicleApi, type VehicleDto } from '../api/vehicleApi';
 import { getImageUrl } from '../api/axiosInstance';
 import StatusBadge from '../components/StatusBadge';
@@ -99,6 +100,7 @@ export default function VehicleDetailPage() {
 		{ icon: <FingerprintIcon />, label: 'VIN Number', value: vehicle.vinNumber || '-' },
 		{ icon: <LocalGasStationIcon />, label: 'Engine Type', value: vehicle.engineType || '-' },
 		{ icon: <LocalGasStationIcon />, label: 'Fuel Type', value: vehicle.fuelType || '-' },
+		{ icon: <PlaceIcon />, label: 'จังหวัด (Province)', value: vehicle.province || '-' },
 		{ icon: <SpeedIcon />, label: 'Mileage', value: vehicle.mileage != null ? `${vehicle.mileage.toLocaleString()} km` : '-' },
 	];
 

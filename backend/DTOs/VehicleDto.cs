@@ -14,6 +14,7 @@ public class VehicleDto
     public string? VinNumber { get; set; }
     public string? EngineType { get; set; }
     public string? FuelType { get; set; }
+    public string Province { get; set; } = string.Empty;
     public double? Mileage { get; set; }
     public string Status { get; set; } = string.Empty;
     public string? ImageUrl { get; set; }
