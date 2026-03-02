@@ -23,7 +23,13 @@ builder.Services.AddCors(options =>
 });
 
 // ── Controllers ───────────────────────────────────────────────────────────────
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Serialize all DateTime as UTC with 'Z' suffix so JS can convert timezone correctly
+        options.JsonSerializerOptions.Converters.Add(new Backend.Converters.UtcDateTimeConverter());
+        options.JsonSerializerOptions.Converters.Add(new Backend.Converters.NullableUtcDateTimeConverter());
+    });
 
 // ── EF Core ───────────────────────────────────────────────────────────────────
 builder.Services.AddDbContext<AppDbContext>(options =>

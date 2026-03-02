@@ -313,7 +313,7 @@ export default function VehicleListPage() {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" color="text.secondary">
-                        {new Date(v.createdAt).toLocaleDateString()}
+                        {new Date(v.createdAt).toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok', year: 'numeric', month: 'short', day: 'numeric' })}
                       </Typography>
                     </TableCell>
                     <TableCell align="center" onClick={(e) => e.stopPropagation()}>

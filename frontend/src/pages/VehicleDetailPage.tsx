@@ -199,14 +199,14 @@ export default function VehicleDetailPage() {
 							<Box>
 								<Typography variant="caption" color="text.secondary">Created</Typography>
 								<Typography variant="body2">
-									{new Date(vehicle.createdAt).toLocaleString()}
+									{new Date(vehicle.createdAt).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
 								</Typography>
 							</Box>
 							{vehicle.updatedAt && (
 								<Box>
 									<Typography variant="caption" color="text.secondary">Updated</Typography>
 									<Typography variant="body2">
-										{new Date(vehicle.updatedAt).toLocaleString()}
+										{new Date(vehicle.updatedAt).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
 									</Typography>
 								</Box>
 							)}
