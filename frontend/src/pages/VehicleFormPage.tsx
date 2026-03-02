@@ -102,6 +102,17 @@ export default function VehicleFormPage() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [brand]);
 
+	// Regex patterns
+	// Thai license plate formats:
+	//   รถยนต์:        กข 1234, กข-1234    (2 Thai + 1-4 digits)
+	//   รถยนต์ใหม่:    1กก 1234             (1 digit + 2 Thai + 1-4 digits)
+	//   รถจักรยานยนต์: กขค 123              (3 Thai + 1-3 digits)
+	const LICENSE_PLATE_REGEX = /^([ก-ฮ]{2,3}[\s-]?[0-9]{1,4}|[0-9][ก-ฮ]{2}[\s-]?[0-9]{1,4})$/;
+	// VIN: 17 alphanumeric chars, no I, O, Q (ISO 3779)
+	const VIN_REGEX = /^[A-HJ-NPR-Z0-9]{17}$/;
+	// Mileage: positive number with optional decimals
+	const MILEAGE_REGEX = /^\d+(\.\d{1,2})?$/;
+
 	// Validation
 	const validate = (): boolean => {
 		const errs: Record<string, string> = {};
@@ -110,6 +121,8 @@ export default function VehicleFormPage() {
 			errs.licensePlate = 'License plate is required';
 		} else if (licensePlate.trim().length > 20) {
 			errs.licensePlate = 'Max 20 characters';
+		} else if (!LICENSE_PLATE_REGEX.test(licensePlate.trim())) {
+			errs.licensePlate = 'Invalid format (e.g. กข-1234, 1กก 1234)';
 		}
 
 		if (!brand.trim()) {
@@ -124,26 +137,32 @@ export default function VehicleFormPage() {
 			errs.model = 'Max 50 characters';
 		}
 
-		if (!year || year < 1900 || year > new Date().getFullYear() + 2) {
-			errs.year = `Year must be between 1900 and ${new Date().getFullYear() + 2}`;
+		if (!year || year < 1900 || year > new Date().getFullYear()) {
+			errs.year = `Year must be between 1900 and ${new Date().getFullYear()}`;
 		}
 
 		if (color.trim().length > 20) {
 			errs.color = 'Max 20 characters';
 		}
 
-		if (vinNumber.trim() && vinNumber.trim().length > 17) {
-			errs.vinNumber = 'VIN must be max 17 characters';
+		if (vinNumber.trim()) {
+			if (vinNumber.trim().length !== 17) {
+				errs.vinNumber = 'VIN must be exactly 17 characters';
+			} else if (!VIN_REGEX.test(vinNumber.trim())) {
+				errs.vinNumber = 'VIN must be A-Z, 0-9 only (no I, O, Q)';
+			}
 		}
 
 		if (fuelType.trim().length > 30) {
 			errs.fuelType = 'Max 30 characters';
 		}
 
-		if (mileage && (isNaN(Number(mileage)) || Number(mileage) < 0)) {
-			errs.mileage = 'Mileage must be a positive number';
-		} else if (mileage && Number(mileage) > 9999999) {
-			errs.mileage = 'Mileage seems too high';
+		if (mileage) {
+			if (!MILEAGE_REGEX.test(mileage)) {
+				errs.mileage = 'Must be a valid positive number';
+			} else if (Number(mileage) > 9999999) {
+				errs.mileage = 'Mileage seems too high (max 9,999,999)';
+			}
 		}
 
 		if (notes.trim().length > 500) {
@@ -372,9 +391,14 @@ export default function VehicleFormPage() {
 							<TextField
 								label="VIN Number"
 								value={vinNumber}
-								onChange={(e) => { setVinNumber(e.target.value.toUpperCase()); setErrors((p) => ({ ...p, vinNumber: '' })); }}
+								onChange={(e) => {
+									// Allow only A-Z, 0-9 (strip I, O, Q automatically)
+									const cleaned = e.target.value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, '');
+									setVinNumber(cleaned);
+									setErrors((p) => ({ ...p, vinNumber: '' }));
+								}}
 								error={!!errors.vinNumber}
-								helperText={errors.vinNumber}
+								helperText={errors.vinNumber || 'A-Z, 0-9 only (no I, O, Q) — 17 chars'}
 								fullWidth
 								inputProps={{ maxLength: 17 }}
 								placeholder="e.g. 1HGCM82633A004352"
@@ -429,13 +453,18 @@ export default function VehicleFormPage() {
 							{/* Mileage */}
 							<TextField
 								label="Mileage (km)"
-								type="number"
 								value={mileage}
-								onChange={(e) => { setMileage(e.target.value); setErrors((p) => ({ ...p, mileage: '' })); }}
+								onChange={(e) => {
+									// Allow only digits and one decimal point
+									const val = e.target.value.replace(/[^0-9.]/g, '').replace(/(\.)(?=.*\.)/g, '');
+									setMileage(val);
+									setErrors((p) => ({ ...p, mileage: '' }));
+								}}
 								error={!!errors.mileage}
 								helperText={errors.mileage}
 								fullWidth
-								inputProps={{ min: 0, max: 9999999 }}
+								inputProps={{ maxLength: 10, inputMode: 'decimal' }}
+								placeholder="e.g. 15000"
 							/>
 
 							{/* Status */}
