@@ -115,3 +115,45 @@ npm run dev
 | ดู log realtime | `docker logs -f fleetcar-backend` |
 | Rebuild เฉพาะ frontend | `docker compose up --build -d frontend` |
 | Rebuild เฉพาะ backend | `docker compose up --build -d backend` |
+
+---
+
+## Database Backup & Restore
+
+โปรเจคมี PowerShell script สำหรับ backup/restore ฐานข้อมูล SQL Server อยู่ที่ root ของโปรเจค
+
+### Backup ฐานข้อมูล
+
+```powershell
+# Backup จาก Docker container (แนะนำ — ใช้กับ docker compose)
+.\backup-db.ps1 -UseDocker
+
+# Backup จาก Local SQL Server
+.\backup-db.ps1
+```
+
+ไฟล์ backup จะถูกเก็บในโฟลเดอร์ `backups/` ตั้งชื่อตาม timestamp เช่น `FleetCarDb_20260302_153000.bak`
+
+### Restore ฐานข้อมูล
+
+```powershell
+# Restore เข้า Docker container
+.\restore-db.ps1 -BackupFile .\backups\FleetCarDb_20260302_153000.bak -UseDocker
+
+# Restore เข้า Local SQL Server
+.\restore-db.ps1 -BackupFile .\backups\FleetCarDb_20260302_153000.bak
+```
+
+> **หมายเหตุ:** Restore จะ OVERWRITE ข้อมูลเดิมทั้งหมด — script จะถามยืนยันก่อนดำเนินการ
+
+### Parameters ที่ใช้ได้
+
+| Parameter | ค่าเริ่มต้น | คำอธิบาย |
+|---|---|---|
+| `-Server` | `localhost` | ที่อยู่ SQL Server |
+| `-Database` | `FleetCarDb` | ชื่อ Database |
+| `-User` | `sa` | Username |
+| `-Password` | `FleetCar@Dev123` | Password |
+| `-BackupDir` | `.\backups` | โฟลเดอร์เก็บไฟล์ backup (เฉพาะ backup) |
+| `-BackupFile` | — | path ไฟล์ .bak (เฉพาะ restore, **จำเป็น**) |
+| `-UseDocker` | — | ใช้เมื่อ SQL Server รันผ่าน Docker container |
