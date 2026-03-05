@@ -51,6 +51,22 @@ services:
     depends_on:
       - backend
 
+  # ── ngrok Tunnel ──
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: fleetcar-ngrok
+    restart: unless-stopped
+    command:
+      - "http"
+      - "http://frontend:80"
+      - "--domain=gorilloid-invitingly-brain.ngrok-free.dev"
+    environment:
+      - NGROK_AUTHTOKEN=2OYk8nHhWjwPW8mltvwfiW3zmKC_2v5r7P4jBmnwoSQSryenU
+    ports:
+      - "4040:4040"    # ngrok dashboard (http://localhost:4040)
+    depends_on:
+      - frontend
+
 volumes:
   sqlserver-data:
   uploads-data:

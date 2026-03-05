@@ -59,7 +59,7 @@
 ### ข้อกำหนดเบื้องต้น
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (รวม Docker Compose)
-- [ngrok](https://ngrok.com/) (เฉพาะกรณีต้องการเผยแพร่ URL สาธารณะ)
+- ไม่ต้องติดตั้ง ngrok แยก — รวมอยู่ใน Docker Compose แล้ว
 
 ### Deploy ด้วย Docker Compose (แนะนำ)
 
@@ -75,16 +75,11 @@ docker compose up --build -d
 docker ps
 
 # 4. เปิดเว็บไซต์
-# http://localhost:5173
-```
-
-### เผยแพร่ด้วย ngrok (สำหรับ Demo)
-
-```bash
-# หลังจาก docker compose up แล้ว
-ngrok http 5173
-
-# จะได้ URL เช่น https://xxxx.ngrok-free.app
+# Local:  http://localhost:5173
+# Public: https://gorilloid-invitingly-brain.ngrok-free.dev
+#
+# ngrok จะ start อัตโนมัติพร้อมกัน ไม่ต้องรันแยก
+# ดู ngrok status ได้ที่ http://localhost:4040
 ```
 
 ### พัฒนาแบบ Local (Dev Mode)
